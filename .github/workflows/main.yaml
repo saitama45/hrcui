@@ -1,0 +1,84 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build_and_deploy:
+    name: Build package and deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: fileinfo, mbstring, xml, gd, zip, pdo_sqlsrv, sqlsrv
+          ini-values: post_max_size=256M, max_execution_time=180
+          tools: composer:v2
+
+      # 1. Cache Composer dependencies
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      # 2. Cache NPM dependencies
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install NPM Dependencies & Build
+        run: |
+          npm ci
+          npm run build
+          # CRITICAL: Remove node_modules after build to keep the deployment package small
+          rm -rf node_modules
+
+      - name: Create Storage Link
+        run: php artisan storage:link
+
+      - name: Create deployment zip
+        run: |
+          zip -r release.zip . -x "*.git*" -x "node_modules/*" -x "tests/*" -x "resources/js/*" -x "resources/css/*" -x "storage/framework/cache/data/*" -x "storage/logs/*"
+
+      # 3. Deploy to FTP hosting
+      - name: Deploy to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          timeout: 120000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            **/resources/js/**
+            **/resources/css/**
+            **/storage/logs/**
+            **/storage/framework/cache/data/**
+            README.md
+            release.zip

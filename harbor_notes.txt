@@ -1,0 +1,60 @@
+# **Project Requirements: Harbor Review Center**
+
+## **1. Project Overview**
+Harbor Review Center is a specialized digital review platform (Web and/or Mobile) designed to prepare mariners for professional examinations. The platform focuses on strategic review using a weighted scoring system based on cognitive domains.
+
+* **Target Launch:** June 30 (Initial Phase); Go-live within the current year.
+* **Content Strategy:** Internal admin uploads only (no user-generated content).
+
+## **2. Technical & Security Specifications**
+To protect intellectual property and the integrity of the question bank:
+* **Anti-Piracy Measures:** Strict "No Screenshot" and "No Download" policies implemented via system-level restrictions.
+* **Device Management:** Secure login/sign-up for individual mariners.
+* **Admin Notifications:** Automated email triggers to the owner/designated administrator upon every new user registration.
+
+## **3. Question Bank & Scoring Logic**
+* **Total Database:** ~15,000 questions (Reference: Marina), with approximately 90% consisting of legacy questions.
+* **Phase 1 (F1) Upload:** 500 to 1,000 foundational questions.
+* **Weighted Scoring:**
+    * **Lower-Level Cognitive Domain (Definitions):** 3 points per question.
+    * **Higher-Level Cognitive Domain (Applied):** 9 points per question.
+* **Passing Benchmark:** 70% overall score.
+* **Exam Pacing:** Strictly 1 minute per question.
+
+## **4. The "Road to Mock Exam" Workflow**
+The system mandates a disciplined review process before a user is permitted to take the Mock Exam:
+
+* **Mandatory Review Hours:** Users must log a minimum of **300 hours** of active review within the application.
+* **Time Tracking:** * A real-time indicator will show "Hours Used" vs. "Hours Remaining."
+    * **Access Restriction:** The Mock Exam module remains locked until the 300-hour requirement is fulfilled.
+* **Mock Exam Structure:**
+    * **Mock Pool:** ~600 randomized questions.
+    * **Timer:** Mandatory countdown timer per attempt.
+    * **Attempts:** Users are granted a maximum of **3 attempts** to pass.
+    * **Failure Protocol:** If the user fails all 3 attempts, the license expires, and a re-payment is required to reset the cycle.
+
+## **5. User Journey & Experience**
+1.  **Onboarding:** User registers and pays the registration fee.
+2.  **Educational Landing Page (TOS):** A strategic guide explaining Cognitive Domains, how to navigate the app, and recommendations on how to prioritize higher-level modules to maximize scores.
+3.  **Active Review:** User engages with modules. The system prioritizes high-level modules to increase the user’s probability of hitting the 70% passing mark.
+4.  **Mock Exam & Analytics:** Post-exam, the system provides a detailed **Distribution Analysis**. 
+    * *Example:* Showing a 30% hit rate in one domain vs. 50% in others to identify weak points.
+
+## **6. Licensing & Subscription**
+* **Duration:** 3 months of access per license.
+* **Expiration:** Access expires upon reaching the 3-month limit, exhausting the 3 mock attempts, or failing to pass within the allowed window.
+
+---
+
+### **Addressing Your Questions:**
+
+> **"How will our clock monitor the hours? Is it from the start of registration? Or from the start of the user to click and open the module for review?"**
+
+**Recommendation:** I suggest using two separate "clocks":
+1.  **The Access Clock (Subscription):** Starts immediately upon **Registration/Payment**. This counts down the **3 months** of total availability.
+2.  **The Review Clock (Requirement):** This should only trigger when a user **clicks and opens a specific review module.** This ensures that the "300 hours" represents actual study time, not just time the app was closed. 
+
+Additional:
+- Offline login so user can still login even if offline
+- Offline review for modules but the 300 hours will still count so the basis for counting should be offline and when online, it will sync up to the cloud database.
+- Configuration for access permissions such as: 3 months access online or specific number of months or unlimited , 300 hours of review lessons (can be increase if wants to pay/order another per 300hours so there is amount equivalent per pesos) or specific number of hours or unlimited, max of 3 times mock exams (can be increase if wants to pay/order another per 3 times mock exams so there is an amount equivalent in pesos) or specific number of times mock exams or unlimited
